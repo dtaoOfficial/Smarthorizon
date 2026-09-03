@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Build & Output
+dist/
+frontend/dist/
+backend/dist/
+build/
+
+# Environment variables
+.env
+backend/.env
+frontend/.env
+*.env.local
+
+# Databases & SQLite WAL/SHM files
+*.db
+*.db-shm
+*.db-wal
+backend/database.db
+backend/database.db-shm
+backend/database.db-wal
+
+# Temporary / OS / IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Archives & Staging
+*.zip
+*.tar.gz
+backend/export_test_output/

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartHorizon | Registration &amp; Check-in</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "error": "#ba1a1a",
+                        "primary": "#003d9b",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "tertiary-fixed": "#ffdbcf",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#374763",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#091c35",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#0c56d0",
+                        "on-primary-container": "#c4d2ff",
+                        "inverse-primary": "#b2c5ff",
+                        "outline": "#737685",
+                        "secondary-fixed": "#d6e3ff",
+                        "on-tertiary-container": "#ffc6b2",
+                        "secondary-fixed-dim": "#b7c7e8",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#001848",
+                        "surface-dim": "#d8dadc",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#cdddff",
+                        "secondary": "#4f5f7b",
+                        "surface-container-high": "#e6e8ea",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#0052cc",
+                        "primary-fixed": "#dae2ff",
+                        "surface": "#f8f9fb",
+                        "tertiary-container": "#a33500",
+                        "on-tertiary-fixed": "#380d00",
+                        "on-surface": "#191c1e",
+                        "on-surface-variant": "#434654",
+                        "on-secondary-container": "#51617e",
+                        "error-container": "#ffdad6",
+                        "background": "#f8f9fb",
+                        "outline-variant": "#c3c6d6",
+                        "surface-bright": "#f8f9fb",
+                        "surface-container": "#eceef0",
+                        "tertiary": "#7b2600",
+                        "primary-fixed-dim": "#b2c5ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-max": "1440px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "code": ["monospace"],
+                        "body-sm": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "code": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "title-lg": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c3c6d6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #737685;
+        }
+        .drawer-shadow {
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+        }
+        .custom-switch:checked + .switch-bg {
+            background-color: #003d9b;
+        }
+        .custom-switch:checked + .switch-bg .switch-dot {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<div class="flex min-h-screen">
+<!-- SideNavBar (from JSON) -->
+<aside class="w-[256px] h-screen sticky top-0 bg-surface-container border-r border-outline-variant flex flex-col py-margin-desktop z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-black text-primary">SmartHorizon</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Hackathon Admin</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Dashboard
+                </a>
+<!-- Participants (Active) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded bg-secondary-container text-on-secondary-container font-semibold font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span> Participants
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="alt_route">alt_route</span> Tracks
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span> Judging
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span> Event
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span> Support
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span> Reports
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span> Settings
+                </a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 px-4 bg-primary text-on-primary rounded font-title-lg text-title-lg flex items-center justify-center gap-2 active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    Create Event
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- TopNavBar (from JSON) -->
+<header class="flex justify-between items-center w-full h-14 px-margin-desktop bg-surface border-b border-outline-variant sticky top-0 z-40">
+<div class="flex items-center gap-8 flex-1">
+<span class="font-headline-md text-headline-md font-bold text-primary">SmartHorizon</span>
+<div class="flex-1 max-w-xl relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full h-9 pl-10 pr-4 bg-surface-container-low border-none rounded focus:ring-2 focus:ring-primary text-body-md" placeholder="Search by team, participant, or college..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex flex-col items-end">
+<span class="text-label-md font-semibold text-primary">Current Round: Phase 2</span>
+<span class="text-[10px] text-outline uppercase tracking-wider">General Track</span>
+</div>
+<div class="h-6 w-px bg-outline-variant mx-2"></div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<img class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A professional headshot of a hackathon administrator wearing a minimalist navy blue blazer, set against a clean, out-of-focus tech office background. The lighting is soft and corporate, aligning with the primary blue and white theme. The image represents leadership and professional oversight in a systematic developer environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC953AW63NHdsOObO587_CnapOflZQPlXDy60pFm7stIdAajl72tjyJad39gnOA2Bnb8KQplbiTCoBOPulDqo-HTfQWvVAmgNyBtBvcDpB2yzs6l7tVq0W0XegC8lhPSXTLTpLV9qESUjRwB_HrE32Me1b8tNqmS3BBL3Y6Igfa5_CptWAcYjPxzJ2-6tyJrQlmiU918KzKBKaNzbxA8zfkTzdwvh7qFVJP6uEcfIXUc8QoiCwZNLMzag-3XwzgQoEtHU2c_4dWCKv6"/>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-margin-desktop">
+<div class="max-w-[1440px] mx-auto space-y-6">
+<!-- Action Header: Drag & Drop Area -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 border-2 border-dashed border-outline-variant rounded-xl p-8 bg-surface-container-lowest flex flex-col items-center justify-center text-center group hover:border-primary transition-colors cursor-pointer">
+<div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="upload_file" style="font-variation-settings: 'opsz' 48;">upload_file</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface mb-1">Upload Participant Roster</h3>
+<p class="text-body-md text-on-surface-variant max-w-sm">Drag and drop your Excel (.xlsx) or CSV file here to bulk register participants.</p>
+<span class="mt-4 px-4 py-1.5 border border-outline-variant rounded font-label-md text-label-md hover:bg-surface-container-low transition-colors">Browse Files</span>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 flex flex-col justify-between border border-outline-variant">
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface mb-2">Check-in Progress</h3>
+<div class="flex items-baseline gap-2 mb-4">
+<span class="text-[32px] font-bold text-primary">142</span>
+<span class="text-body-md text-outline">/ 450 Checked in</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[31.5%]"></div>
+</div>
+</div>
+<div class="flex gap-2 mt-4">
+<button class="flex-1 py-2 px-3 bg-secondary-container text-on-secondary-container rounded font-label-md text-label-md font-semibold hover:opacity-90 transition-opacity">Export CSV</button>
+<button class="flex-1 py-2 px-3 border border-outline-variant text-on-surface rounded font-label-md text-label-md font-semibold hover:bg-surface transition-colors">Manual Add</button>
+</div>
+</div>
+</section>
+<!-- Filter Bar -->
+<section class="flex flex-wrap items-center justify-between gap-4 py-2">
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+<span class="text-label-md font-bold text-outline uppercase tracking-widest mr-2">Filters:</span>
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-on-primary rounded-full font-label-md text-label-md shadow-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="check">check</span> Checked In
+                            </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md border border-outline-variant hover:bg-surface-variant transition-colors">
+                                Pending
+                            </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md border border-outline-variant hover:bg-surface-variant transition-colors">
+                                AI &amp; ML Track
+                            </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md border border-outline-variant hover:bg-surface-variant transition-colors">
+                                Web3 Track
+                            </button>
+<button class="text-primary font-label-md text-label-md font-semibold ml-2 hover:underline">Clear All</button>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-body-sm text-outline">Showing 10 of 450 results</span>
+<select class="bg-surface-container-low border-none rounded font-label-md text-label-md py-1 focus:ring-primary">
+<option>Sort by: Newest</option>
+<option>Sort by: Team Name</option>
+<option>Sort by: Track</option>
+</select>
+</div>
+</section>
+<!-- Data Table -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="py-3 px-4 font-label-md text-label-md text-outline uppercase tracking-wider">Team Name</th>
+<th class="py-3 px-4 font-label-md text-label-md text-outline uppercase tracking-wider">Track</th>
+<th class="py-3 px-4 font-label-md text-label-md text-outline uppercase tracking-wider">Participant</th>
+<th class="py-3 px-4 font-label-md text-label-md text-outline uppercase tracking-wider">College</th>
+<th class="py-3 px-4 font-label-md text-label-md text-outline uppercase tracking-wider">Status</th>
+<th class="py-3 px-4 font-label-md text-label-md text-outline uppercase tracking-wider text-center">Check-in</th>
+<th class="py-3 px-4 font-label-md text-label-md text-outline uppercase tracking-wider">Timestamp</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Team Alpha - Active Row -->
+<tr class="hover:bg-surface-container-low cursor-pointer transition-colors bg-secondary-container/20 border-l-4 border-l-primary">
+<td class="py-3 px-4">
+<div class="font-title-lg text-title-lg text-on-surface">Team Alpha</div>
+</td>
+<td class="py-3 px-4">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded text-[11px] font-bold uppercase tracking-tight">AI &amp; ML</span>
+</td>
+<td class="py-3 px-4 text-body-md text-on-surface">Sarah Connor</td>
+<td class="py-3 px-4 text-body-sm text-on-surface-variant">Tech University</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5 text-primary font-semibold text-body-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                                            Checked In
+                                        </div>
+</td>
+<td class="py-3 px-4">
+<div class="flex justify-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer custom-switch" type="checkbox"/>
+<div class="w-9 h-5 bg-outline-variant rounded-full switch-bg transition-colors peer-focus:outline-none">
+<div class="absolute top-[2px] left-[2px] bg-white border-outline-variant border h-4 w-4 rounded-full transition-transform switch-dot"></div>
+</div>
+</label>
+</div>
+</td>
+<td class="py-3 px-4 text-body-sm text-outline">10:42 AM</td>
+</tr>
+<!-- Other rows -->
+<tr class="hover:bg-surface-container-low cursor-pointer transition-colors">
+<td class="py-3 px-4"><div class="font-title-lg text-title-lg">Cyber Knights</div></td>
+<td class="py-3 px-4"><span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed-variant rounded text-[11px] font-bold uppercase tracking-tight">Cyber Security</span></td>
+<td class="py-3 px-4 text-body-md">David Miller</td>
+<td class="py-3 px-4 text-body-sm text-on-surface-variant">State College</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5 text-outline font-medium text-body-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+                                            Pending
+                                        </div>
+</td>
+<td class="py-3 px-4">
+<div class="flex justify-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer custom-switch" type="checkbox"/>
+<div class="w-9 h-5 bg-outline-variant rounded-full switch-bg transition-colors peer-focus:outline-none">
+<div class="absolute top-[2px] left-[2px] bg-white border-outline-variant border h-4 w-4 rounded-full transition-transform switch-dot"></div>
+</div>
+</label>
+</div>
+</td>
+<td class="py-3 px-4 text-body-sm text-outline">--</td>
+</tr>
+<!-- More data... (repeated for visual density) -->
+<tr class="hover:bg-surface-container-low cursor-pointer transition-colors">
+<td class="py-3 px-4"><div class="font-title-lg text-title-lg">Web Wizards</div></td>
+<td class="py-3 px-4"><span class="px-2 py-0.5 bg-primary-fixed text-on-primary-fixed-variant rounded text-[11px] font-bold uppercase tracking-tight">Web3</span></td>
+<td class="py-3 px-4 text-body-md">Elena Rodriguez</td>
+<td class="py-3 px-4 text-body-sm text-on-surface-variant">Global Institute</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5 text-primary font-semibold text-body-sm">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                                            Checked In
+                                        </div>
+</td>
+<td class="py-3 px-4">
+<div class="flex justify-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer custom-switch" type="checkbox"/>
+<div class="w-9 h-5 bg-outline-variant rounded-full switch-bg transition-colors peer-focus:outline-none">
+<div class="absolute top-[2px] left-[2px] bg-white border-outline-variant border h-4 w-4 rounded-full transition-transform switch-dot"></div>
+</div>
+</label>
+</div>
+</td>
+<td class="py-3 px-4 text-body-sm text-outline">09:15 AM</td>
+</tr>
+<!-- Mock rows for scroll -->
+<tr class="hover:bg-surface-container-low cursor-pointer transition-colors">
+<td class="py-3 px-4"><div class="font-title-lg text-title-lg text-on-surface opacity-60">Delta Force</div></td>
+<td class="py-3 px-4 opacity-60"><span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant rounded text-[11px] font-bold uppercase tracking-tight">IoT</span></td>
+<td class="py-3 px-4 text-body-md opacity-60">John Doe</td>
+<td class="py-3 px-4 text-body-sm text-on-surface-variant opacity-60">West Tech</td>
+<td class="py-3 px-4 opacity-60">
+<div class="flex items-center gap-1.5 text-outline font-medium text-body-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+                                            Pending
+                                        </div>
+</td>
+<td class="py-3 px-4 opacity-60">
+<div class="flex justify-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer custom-switch" type="checkbox"/>
+<div class="w-9 h-5 bg-outline-variant rounded-full switch-bg transition-colors peer-focus:outline-none">
+<div class="absolute top-[2px] left-[2px] bg-white border-outline-variant border h-4 w-4 rounded-full transition-transform switch-dot"></div>
+</div>
+</label>
+</div>
+</td>
+<td class="py-3 px-4 text-body-sm text-outline opacity-60">--</td>
+</tr>
+<tr class="hover:bg-surface-container-low cursor-pointer transition-colors">
+<td class="py-3 px-4"><div class="font-title-lg text-title-lg text-on-surface opacity-60">Neural Net</div></td>
+<td class="py-3 px-4 opacity-60"><span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant rounded text-[11px] font-bold uppercase tracking-tight">AI &amp; ML</span></td>
+<td class="py-3 px-4 text-body-md opacity-60">Michael Chen</td>
+<td class="py-3 px-4 text-body-sm text-on-surface-variant opacity-60">Northern Poly</td>
+<td class="py-3 px-4 opacity-60">
+<div class="flex items-center gap-1.5 text-outline font-medium text-body-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+                                            Pending
+                                        </div>
+</td>
+<td class="py-3 px-4 opacity-60">
+<div class="flex justify-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer custom-switch" type="checkbox"/>
+<div class="w-9 h-5 bg-outline-variant rounded-full switch-bg transition-colors peer-focus:outline-none">
+<div class="absolute top-[2px] left-[2px] bg-white border-outline-variant border h-4 w-4 rounded-full transition-transform switch-dot"></div>
+</div>
+</label>
+</div>
+</td>
+<td class="py-3 px-4 text-body-sm text-outline opacity-60">--</td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+</div>
+</main>
+<!-- Side Drawer: Details for Team Alpha -->
+<aside class="fixed right-0 top-0 h-full w-[400px] bg-surface-container-lowest drawer-shadow border-l border-outline-variant z-50 flex flex-col transform transition-transform duration-300 ease-in-out" id="team-drawer">
+<div class="flex items-center justify-between p-6 border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container text-on-primary-container rounded flex items-center justify-center font-bold">TA</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Team Alpha</h2>
+<span class="text-body-sm text-outline">ID: SH-2024-042</span>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container-low rounded-full" onclick="document.getElementById('team-drawer').classList.add('translate-x-full')">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-8">
+<!-- Registration Status -->
+<div class="bg-primary-container/10 border border-primary/20 rounded-xl p-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-label-md font-bold text-primary uppercase tracking-widest">Registration Status</span>
+<span class="px-2 py-0.5 bg-primary text-on-primary rounded text-[10px] font-black uppercase">Confirmed</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex-1 text-body-sm text-on-surface-variant">Waiver Signed</div>
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex items-center gap-3 mt-2">
+<div class="flex-1 text-body-sm text-on-surface-variant">ID Verified</div>
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+<!-- Track & Project -->
+<section>
+<h3 class="text-label-md font-bold text-outline uppercase tracking-widest mb-4">Track Information</h3>
+<div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-tertiary" data-icon="neurology">neurology</span>
+<div>
+<div class="text-body-md font-semibold">AI &amp; Machine Learning</div>
+<div class="text-body-sm text-outline">Focused on Generative UI Models</div>
+</div>
+</div>
+</section>
+<!-- Members -->
+<section>
+<h3 class="text-label-md font-bold text-outline uppercase tracking-widest mb-4">Team Members (3)</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="A small circular avatar of a young female software engineer with glasses, looking professional and friendly. The portrait is high-definition, with a soft-focus background that echoes the minimalist, blue-toned tech environment of the SmartHorizon system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYN101qkBkBk29VkHGzGb6zw7i5RfNEOh5vmxEVPwMOUMzaojZPxIZdsfmjpf80lRtMpJXIQF8snJwAOR2aOdfdWo9y25azj44VYJbEsynl3uFkrvuRd5tgRR4-evL_QU1JSbEG8BOj3zCVCQyMxd_BP54qtYtH0IP4k0Ujq77QK_h_QvSy1vYWC0X1x4_PkCYV3SCqzeTCPX_ZPqNq9QgWQgkHCKMyuJ57iJ7Hux0dKUp8I7RvQeqiD0tKE-UxbTnUtwqs4powsWX"/>
+<div>
+<div class="text-body-md font-medium">Sarah Connor</div>
+<div class="text-[11px] text-outline">Team Lead • tech@uni.edu</div>
+</div>
+</div>
+<span class="px-2 py-0.5 bg-primary/10 text-primary rounded text-[10px] font-bold">Checked In</span>
+</div>
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="A minimalist circular profile picture of a young male developer with a modern hairstyle, wearing a gray sweatshirt. The lighting is bright and clean, typical of a high-end corporate developer portal, maintaining visual consistency with the SmartHorizon brand palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAubBJgxHTq8wOn_DFyiqOy8LBWPGjGj0DLKi4-Dep0n2MYeGYaAIqfcXZUVjY5hOaKn5cE9h10Ig6euhGVcjRJ7JSRDA41M0ok-__XDx6cTEJEIFLBCZe_qZ1YqnRssN5ZDfGF72Lg1SuSaz0u3n2dc0jWELiJJ_XlZX7hEtMCwVqD9CGa0Y6n51Tm4ebF6tYY-cKIGxu8JH6WqCFw1hPyVMJbDGzkd4V5qpItRrc2-tXUEdw7c1Y6O7gRav35_eOJoTJLiL8o0sb8"/>
+<div>
+<div class="text-body-md font-medium">John Smith</div>
+<div class="text-[11px] text-outline">Developer • john.s@uni.edu</div>
+</div>
+</div>
+<span class="px-2 py-0.5 bg-outline/10 text-outline rounded text-[10px] font-bold">Waiting</span>
+</div>
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="A portrait-style avatar of a college-aged male participant with a friendly smile, set against a simple studio backdrop. The lighting is even and professional, using cool tones that align with the SmartHorizon blue and silver interface style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKa20cscIrzf83NpLXhtT1tLkkl4YmkxemZrD2Fm8yIwOk9zAEYSH2fRFpertSQJ1NaNQqR8zCB_wFDvaBRRxxyuCk8q456j0QeRxwYJ1RoR8EIrNrEHQyQ0Nt01r4pSvIMJsDbK9KWJSogQqme34Gkunnxe8gM-Dpy910A4Jq71MfxRpjvLB-5QkAMlSxpv8k4qJKdzkUUagBjtlpV_FAU6un45W2ECSvPWRxujVLr8AaTQ_At3sNyiSd8Zxfq7eZdvZFTW5hDmF7"/>
+<div>
+<div class="text-body-md font-medium">Kyle Reese</div>
+<div class="text-[11px] text-outline">Designer • kyle.r@uni.edu</div>
+</div>
+</div>
+<span class="px-2 py-0.5 bg-outline/10 text-outline rounded text-[10px] font-bold">Waiting</span>
+</div>
+</div>
+</section>
+<!-- Emergency Contact -->
+<section>
+<h3 class="text-label-md font-bold text-outline uppercase tracking-widest mb-4">Emergency Contact</h3>
+<div class="p-4 rounded-lg border border-outline-variant">
+<div class="text-body-md font-semibold">Linda Connor (Mother)</div>
+<div class="text-body-sm text-on-surface-variant mt-1">+1 (555) 902-1142</div>
+<button class="mt-3 text-primary font-semibold text-body-sm flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-[16px]" data-icon="call">call</span> Call Now
+                        </button>
+</div>
+</section>
+</div>
+<div class="p-6 border-t border-outline-variant bg-surface-container-low">
+<div class="flex gap-3">
+<button class="flex-1 py-2.5 bg-primary text-on-primary rounded font-title-lg text-title-lg shadow hover:opacity-90 transition-opacity">
+                        Print Badge
+                    </button>
+<button class="p-2.5 border border-outline-variant text-on-surface rounded hover:bg-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+<!-- Micro-interaction for drawer -->
+<script>
+        // Simple function to toggle drawer for demo purposes
+        function toggleDrawer() {
+            const drawer = document.getElementById('team-drawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        // Logic to simulate row selection
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if(e.target.closest('input[type="checkbox"]')) return;
+                const drawer = document.getElementById('team-drawer');
+                drawer.classList.remove('translate-x-full');
+            });
+        });
+    </script>
+</body></html>

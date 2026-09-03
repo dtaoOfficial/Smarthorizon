@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/database.db:/app/database.db
+      - ./backend/database.db-shm:/app/database.db-shm
+      - ./backend/database.db-wal:/app/database.db-wal
+      - ./backend/uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_BASE_URL: /smarthorizon/portal/
+        VITE_API_URL: /smarthorizon/portal/api
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${HTTP_PORT:-8081}:80"

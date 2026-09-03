@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-canvas: #0E0E0E;
+  --color-surface: #181818;
+  --color-surface-elevated: #2B2B2B;
+  
+  --color-white: #FFFFFF;
+  --color-light: #D4D4D4;
+  --color-gray: #B3B3B3;
+  --color-dark: #2B2B2B;
+  
+  --color-text-main: #FFFFFF;
+  --color-text-sub: #D4D4D4;
+  --color-text-muted: #B3B3B3;
+  
+  --color-border: #2B2B2B;
+
+  /* Semantic Admin Control Tokens (WCAG 2.1 AA Compliant) */
+  --admin-bg: #F8FAFC;
+  --admin-surface: #FFFFFF;
+  --admin-text-primary: #0F172A;
+  --admin-text-secondary: #334155;
+  --admin-border: #64748B;
+  --admin-control-bg: #FFFFFF;
+  --admin-control-text: #0F172A;
+  --admin-primary: #0284C7;
+  --admin-primary-text: #FFFFFF;
+  --admin-disabled-bg: #E2E8F0;
+  --admin-disabled-text: #64748B;
+}
+
+@layer components {
+  .admin-btn-action {
+    background-color: var(--admin-surface);
+    color: var(--admin-text-primary);
+    border: 2px solid var(--admin-border);
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    transition: all 0.2s ease-in-out;
+  }
+  .admin-btn-action:hover {
+    background-color: #F1F5F9;
+    border-color: #0284C7;
+    color: #0284C7;
+  }
+  .admin-btn-primary {
+    background-color: #0284C7;
+    color: #FFFFFF;
+    border: 2px solid #0284C7;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    transition: all 0.2s ease-in-out;
+  }
+  .admin-btn-primary:hover {
+    background-color: #0369A1;
+    border-color: #0369A1;
+  }
+  .admin-control-select {
+    background-color: #FFFFFF;
+    color: #0F172A;
+    border: 2px solid #64748B;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  .admin-control-select:focus {
+    border-color: #0284C7;
+    outline: none;
+  }
+  .admin-control-input {
+    background-color: #FFFFFF;
+    color: #0F172A;
+    border: 2px solid #64748B;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  .admin-control-input::placeholder {
+    color: #475569;
+    font-weight: 700;
+  }
+  .admin-control-input:focus {
+    border-color: #0284C7;
+    outline: none;
+  }
+}
+
+@layer base {
+  * {
+    border-color: #2B2B2B;
+  }
+  
+  html, body {
+    background-color: #0E0E0E;
+    color: #FFFFFF;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0E0E0E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2B2B2B;
+  border-radius: 3px;
+  border: 1px solid #2B2B2B;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4D4D4;
+}
+
+/* Structural Glass & Cards */
+.glass-panel {
+  background: rgba(24, 24, 24, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #2B2B2B;
+  color: #FFFFFF;
+}
+
+.glass-card {
+  background: #181818;
+  border: 1px solid #2B2B2B;
+  color: #FFFFFF;
+}
+
+.glass-card-hover {
+  transition: all 0.2s ease-out;
+}
+
+.glass-card-hover:hover {
+  border-color: #555555;
+  background: #2B2B2B;
+}
+
+/* Hide Scrollbar */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Global Light Theme Overrides (Applied when .light-theme is present) */
+.light-theme .bg-\[\#181818\] { background-color: #ffffff !important; }
+.light-theme .bg-\[\#0E0E0E\] { background-color: #F5FAFE !important; }
+.light-theme .bg-\[\#2B2B2B\] { background-color: #EFF6FF !important; }
+.light-theme .border-\[\#2B2B2B\] { border-color: #C8DCEB !important; }
+.light-theme .border-\[\#555555\] { border-color: #BFDBFE !important; }
+.light-theme .border-\[\#FFFFFF\] { border-color: #0B2340 !important; }
+.light-theme .text-\[\#FFFFFF\] { color: #0B2340 !important; }
+.light-theme .text-\[\#E5E5E5\],
+.light-theme .text-\[\#D4D4D4\],
+.light-theme .text-\[\#B3B3B3\] { color: #52677D !important; }
+.light-theme .divide-\[\#2B2B2B\] > :not([hidden]) ~ :not([hidden]) { border-color: #C8DCEB !important; }
+.light-theme .placeholder\:\#B3B3B3::placeholder { color: #94A3B8 !important; }
+.light-theme .hover\:bg-\[\#2B2B2B\]:hover { background-color: #EFF6FF !important; }
+.light-theme .hover\:bg-\[\#555555\]:hover { background-color: #DBEAFE !important; }
+.light-theme .hover\:border-\[\#555555\]:hover { border-color: #60A5FA !important; }
+.light-theme .hover\:text-\[\#FFFFFF\]:hover { color: #0B63B6 !important; }
+.light-theme .focus\:border-\[\#FFFFFF\]:focus { border-color: #0B63B6 !important; }
+
+/* Override legacy Structural Glass & Cards if used */
+.light-theme .glass-panel { background: rgba(255, 255, 255, 0.95); border-color: #C8DCEB; color: #0B2340; }
+.light-theme .glass-card { background: #ffffff; border-color: #C8DCEB; color: #0B2340; }
+.light-theme .glass-card-hover:hover { border-color: #BFDBFE; background: #EFF6FF; }
+
+.light-theme .hover\:text-white:hover { color: #0B63B6 !important; }
+
+.light-theme .hover\:bg-\[\#333333\]:hover { background-color: #DBEAFE !important; }

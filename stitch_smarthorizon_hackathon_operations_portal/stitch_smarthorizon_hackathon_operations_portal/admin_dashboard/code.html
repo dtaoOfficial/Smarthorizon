@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartHorizon Admin Dashboard</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Design System Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e0e3e5",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "error": "#ba1a1a",
+                    "primary": "#003d9b",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#374763",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#091c35",
+                    "on-primary-fixed-variant": "#0040a2",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#0c56d0",
+                    "on-primary-container": "#c4d2ff",
+                    "inverse-primary": "#b2c5ff",
+                    "outline": "#737685",
+                    "secondary-fixed": "#d6e3ff",
+                    "on-tertiary-container": "#ffc6b2",
+                    "secondary-fixed-dim": "#b7c7e8",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#001848",
+                    "surface-dim": "#d8dadc",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#cdddff",
+                    "secondary": "#4f5f7b",
+                    "surface-container-high": "#e6e8ea",
+                    "on-background": "#191c1e",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#0052cc",
+                    "primary-fixed": "#dae2ff",
+                    "surface": "#f8f9fb",
+                    "tertiary-container": "#a33500",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-surface": "#191c1e",
+                    "on-surface-variant": "#434654",
+                    "on-secondary-container": "#51617e",
+                    "error-container": "#ffdad6",
+                    "background": "#f8f9fb",
+                    "outline-variant": "#c3c6d6",
+                    "surface-bright": "#f8f9fb",
+                    "surface-container": "#eceef0",
+                    "tertiary": "#7b2600",
+                    "primary-fixed-dim": "#b2c5ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "container-max": "1440px",
+                    "margin-desktop": "32px",
+                    "margin-mobile": "16px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display": ["Inter"],
+                    "code": ["monospace"],
+                    "body-sm": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "code": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "title-lg": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="bg-surface-container w-[256px] h-screen sticky top-0 flex flex-col py-margin-desktop border-r border-outline-variant transition-all duration-200 ease-in-out" id="sidebar">
+<div class="px-6 mb-8 flex items-center gap-3">
+<span class="font-headline-lg text-headline-lg font-black text-primary">SmartHorizon</span>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<!-- Dashboard Active -->
+<a class="bg-secondary-container text-on-secondary-container font-semibold flex items-center gap-3 px-3 py-2.5 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<!-- Other Nav Items -->
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-3 px-3 py-2.5 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-md text-label-md">Participants</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-3 px-3 py-2.5 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="alt_route">alt_route</span>
+<span class="font-label-md text-label-md">Tracks</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-3 px-3 py-2.5 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="font-label-md text-label-md">Judging</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-3 px-3 py-2.5 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+<span class="font-label-md text-label-md">Event</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-3 px-3 py-2.5 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-3 px-3 py-2.5 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-3 px-3 py-2.5 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-title-lg flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span>Create Event</span>
+</button>
+<div class="mt-6 flex items-center gap-3 px-2">
+<img class="w-10 h-10 rounded-full border border-outline-variant" data-alt="A professional headshot of a female technology executive with short dark hair, wearing a clean charcoal blazer. The background is a soft-focus modern office with cool blue and grey lighting, matching a high-end corporate tech aesthetic. The overall mood is authoritative, calm, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwvqY1d3rrguuhBzxAD0ex9ZWdZgZCZFyJNKxkQCC5sS7awHsRPAQDzb6IsSgP_PI9whF-6w4Ad1m1e0ZbNgbj2Bw6Y1bCQTYpHb_oyoxOad-SasahFkMTwGwUHvYsWtCiN9V41ytxx1_ef_SculgS16Lt9EzzIIY6G_QxjZEfl3X4WxMFD0sleUJj7t_grLnZhSN1ARswbHe9-F7dewBVCObpIx8qWOmmzCAvBjzNMCPJaR_q5wogCP3HHHsSWcGmT-iKjvDQKarr"/>
+<div class="flex flex-col">
+<span class="font-label-md text-on-surface font-bold">Admin Profile</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider">Hackathon Admin</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar Anchor -->
+<header class="bg-surface sticky top-0 z-40 flex justify-between items-center w-full h-14 px-margin-desktop border-b border-outline-variant">
+<div class="flex items-center gap-8">
+<div class="relative group">
+<button class="flex items-center gap-2 px-3 py-1.5 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-md text-on-surface-variant">Track:</span>
+<span class="font-title-lg text-primary">All Tracks</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-2">
+<span class="font-title-lg text-on-surface">Current Round:</span>
+<span class="px-2 py-0.5 bg-primary-fixed text-on-primary-fixed rounded text-[12px] font-bold">Phase 2</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center px-3 py-1.5 bg-surface-container-low rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-outline mr-2 text-[18px]" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-64 p-0 placeholder:text-outline" placeholder="Search participants, teams..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-margin-desktop max-w-container-max mx-auto w-full space-y-gutter">
+<!-- Key Metrics Grid (4-column) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<div class="bg-surface border border-outline-variant p-5 rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-md">Registration Progress</span>
+<span class="material-symbols-outlined text-primary" data-icon="how_to_reg">how_to_reg</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-display font-display text-on-surface">85%</span>
+<span class="text-body-sm text-on-error font-medium bg-error px-1.5 rounded-sm">Goal: 90%</span>
+</div>
+<div class="mt-4 w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 85%"></div>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant p-5 rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-md">Teams Checked In</span>
+<span class="material-symbols-outlined text-secondary" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-display font-display text-on-surface">142</span>
+<span class="text-on-surface-variant text-body-sm">/ 160</span>
+</div>
+<p class="text-[11px] mt-4 text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-green-600" data-icon="trending_up">trending_up</span>
+                        +12 in the last hour
+                    </p>
+</div>
+<div class="bg-surface border border-outline-variant p-5 rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-md">Judges Reviewing</span>
+<span class="material-symbols-outlined text-tertiary" data-icon="gavel">gavel</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-display font-display text-on-surface">18</span>
+<span class="text-on-surface-variant text-body-sm">/ 24</span>
+</div>
+<p class="text-[11px] mt-4 text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="schedule">schedule</span>
+                        6 judges currently inactive
+                    </p>
+</div>
+<div class="bg-surface border border-outline-variant p-5 rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-md">Pending Questions</span>
+<span class="material-symbols-outlined text-error" data-icon="help_center">help_center</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-display font-display text-on-surface">12</span>
+</div>
+<p class="text-[11px] mt-4 text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-error" data-icon="priority_high">priority_high</span>
+                        3 urgent tickets require action
+                    </p>
+</div>
+</section>
+<!-- Main Operational Area: Bento Grid Layout -->
+<section class="grid grid-cols-12 gap-gutter">
+<!-- Active Review Round (Large Card) -->
+<div class="col-span-12 lg:col-span-8 bg-surface border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Active Review Round Progress</h2>
+<p class="text-body-sm text-on-surface-variant">Phase 2: Technical Depth &amp; Innovation</p>
+</div>
+<button class="text-primary font-label-md hover:underline flex items-center gap-1">
+                            Details <span class="material-symbols-outlined text-[16px]" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+<div class="p-8 flex flex-col justify-center flex-1">
+<div class="flex justify-between items-end mb-2">
+<span class="font-display text-[48px] font-black text-primary">65%</span>
+<span class="font-label-md text-on-surface-variant pb-2">312 / 480 Submissions Reviewed</span>
+</div>
+<div class="w-full bg-surface-container h-4 rounded-full overflow-hidden mb-8">
+<div class="bg-primary h-full rounded-full transition-all duration-1000" style="width: 65%"></div>
+</div>
+<div class="grid grid-cols-3 gap-6">
+<div class="space-y-1">
+<span class="text-[10px] uppercase font-bold text-outline">Accuracy</span>
+<p class="font-title-lg">94.2%</p>
+</div>
+<div class="space-y-1">
+<span class="text-[10px] uppercase font-bold text-outline">Avg Time / Review</span>
+<p class="font-title-lg">4m 12s</p>
+</div>
+<div class="space-y-1">
+<span class="text-[10px] uppercase font-bold text-outline">Conflicts</span>
+<p class="font-title-lg text-error">8 Flagged</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions (Medium Card) -->
+<div class="col-span-12 lg:col-span-4 bg-surface border border-outline-variant rounded-xl p-6">
+<h3 class="font-title-lg text-title-lg mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="bolt">bolt</span>
+                        Quick Actions
+                    </h3>
+<div class="space-y-3">
+<button class="w-full flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-left group">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload">upload</span>
+</div>
+<span class="font-label-md flex-1">Import Teams</span>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-left group">
+<div class="w-8 h-8 rounded bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[18px]" data-icon="rate_review">rate_review</span>
+</div>
+<span class="font-label-md flex-1">Create Review</span>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-left group">
+<div class="w-8 h-8 rounded bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[18px]" data-icon="campaign">campaign</span>
+</div>
+<span class="font-label-md flex-1">Publish Announcement</span>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-left group">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[18px]" data-icon="person_add">person_add</span>
+</div>
+<span class="font-label-md flex-1">Add Judge</span>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-left group">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[18px]" data-icon="rule">rule</span>
+</div>
+<span class="font-label-md flex-1">Configure Criteria</span>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Upcoming Events Timeline (Medium Card) -->
+<div class="col-span-12 lg:col-span-6 bg-surface border border-outline-variant rounded-xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-lg text-title-lg">Upcoming Events</h3>
+<span class="text-body-sm text-outline">Next 24 Hours</span>
+</div>
+<div class="space-y-6 relative before:content-[''] before:absolute before:left-3 before:top-2 before:bottom-2 before:w-px before:bg-outline-variant">
+<div class="relative pl-10">
+<div class="absolute left-1.5 top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-primary-fixed"></div>
+<div class="flex flex-col">
+<span class="text-on-surface font-bold font-body-md">Phase 2 Review Deadline</span>
+<span class="text-body-sm text-on-surface-variant">Today, 18:00 (In 4 hours)</span>
+<p class="mt-2 text-body-sm text-on-surface-variant bg-surface-container-low p-2 rounded">All judges must finalize scores for the Innovation Track.</p>
+</div>
+</div>
+<div class="relative pl-10">
+<div class="absolute left-1.5 top-1 w-3 h-3 rounded-full bg-outline-variant"></div>
+<div class="flex flex-col">
+<span class="text-on-surface font-bold font-body-md">Finalist Announcement</span>
+<span class="text-body-sm text-on-surface-variant">Today, 20:30</span>
+</div>
+</div>
+<div class="relative pl-10">
+<div class="absolute left-1.5 top-1 w-3 h-3 rounded-full bg-outline-variant"></div>
+<div class="flex flex-col">
+<span class="text-on-surface font-bold font-body-md">Demo Pitches Stage 1</span>
+<span class="text-body-sm text-on-surface-variant">Tomorrow, 09:00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Announcements (Medium Card) -->
+<div class="col-span-12 lg:col-span-6 bg-surface border border-outline-variant rounded-xl overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-title-lg text-title-lg">Recent Announcements</h3>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div class="divide-y divide-outline-variant">
+<div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-lg bg-cover bg-center flex-shrink-0" data-alt="A small square thumbnail showing a vibrant hackathon workspace with multiple monitors and soft purple ambient lighting. The style is modern tech and professional." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDtIbAoBjjUEIwHT54aCllYdcGbqWJchciS9urdtmY2609tYlEdHyJN9oT6_NBQVPbiPGcKZwpvOHCeSP9BnQtFAOMs35GIC1cGkNNhvRWdLNO30DimNDZaWBgFeMw36VJJPwLaPn5D_drVSPCe1RUH-XEVZYy_c2Wp72XEM1kYC-VnFN0XInskakKQNwPFMoei6L1Oqkn2JtxC-oblh2DgMVreFtmjRhyiN53AuDvVAL6ESzGrCIztaV_CC4A2MA8yfUvOSJYNDAdT')"></div>
+<div>
+<h4 class="font-label-md text-on-surface">API Credentials Updated</h4>
+<p class="text-body-sm text-on-surface-variant line-clamp-1">New keys for the cloud infrastructure have been dispatched to all team leads...</p>
+<span class="text-[11px] text-outline mt-1 block">Sent by System • 2h ago</span>
+</div>
+</div>
+</div>
+<div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-lg bg-cover bg-center flex-shrink-0" data-alt="A clean iconographic image of a digital clock set to midnight against a dark background with blue glowing circuits. High-tech, systematic and urgent aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBkNgUHOS8ihnsKrq9v8nt5SmBI7T3rYxo1S2M9y-ifMpkHsAqI_xXjHQgOqBgODuyICCdax6W2fYRCVV34hxi5x89SmFsh4GcWpYX0L-uayiG0-6pFAkv8GGSIwN0DjKMCbiHpKKrcXhGy1P0wEH-Pbdck3gfJQRWobLxwyySbc6K78wt6W5sXNXVp5dVXuToA6vkJDlLMx6h771v4-sdSYpa29c4gWQWour5Iwd_rFhtyfKYZFuabyyZfcIl7wN3SuOMwH1iBtQIb')"></div>
+<div>
+<h4 class="font-label-md text-on-surface">Phase 2 Submission Window Closing</h4>
+<p class="text-body-sm text-on-surface-variant line-clamp-1">Gentle reminder that the technical documentation window closes in 2 hours.</p>
+<span class="text-[11px] text-outline mt-1 block">Sent by Admin Sarah • 4h ago</span>
+</div>
+</div>
+</div>
+<div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-lg bg-cover bg-center flex-shrink-0" data-alt="A professional photo of a catering spread with healthy snacks and coffee in a modern corporate breakroom. Bright natural lighting and high-end tech office vibe." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBaUjwL280w0YA2cjKYa3ryChYCa5fK64vvF-54UIcipraBnFhfcWLiH5sKN8AvDuQSUXdGG9Dvq0S5mJlHDhvRLqigj73Wo5al9nOBySlnTFH9mxDUkh0nNtf8w4AOmqF6vCb80hWHPPdTqv4K3LNhoOp2r0kpbn_sV8RlwU0ZK-YNODXTpLLwlUfNisCeALLZP94H4y7Mt3YFxrVRCDMaYDxaeLi192deFOyuiOoFrEHZLGNHzPLpLAuJPEd81sCTfwmX41Y-ftvq')"></div>
+<div>
+<h4 class="font-label-md text-on-surface">Dinner is Served in Hall B</h4>
+<p class="text-body-sm text-on-surface-variant line-clamp-1">Hot meals and refreshments are now available for all registered participants.</p>
+<span class="text-[11px] text-outline mt-1 block">Sent by Logistics • 6h ago</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 text-center font-label-md text-primary bg-surface-container-low hover:bg-surface-container hover:underline transition-colors">
+                        View All Announcements
+                    </button>
+</div>
+</section>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        // Collapsible Sidebar Simulation (UI-only)
+        const sidebar = document.getElementById('sidebar');
+        // This is a placeholder for a real toggle if needed
+        
+        // Progress Bar Animation on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const progressBars = document.querySelectorAll('.bg-primary.h-full');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+        });
+
+        // Add "active" class logic manually as instructed
+        // Current Page: Dashboard (already set in HTML via manual selection based on intent)
+    </script>
+</body></html>

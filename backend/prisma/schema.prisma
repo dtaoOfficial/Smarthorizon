@@ -1,0 +1,631 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database.db?connection_limit=1&busy_timeout=30000"
+}
+
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+model Hackathon {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  active      Boolean       @default(false)
+  feedbackEnabled Boolean   @default(false)
+  submissionsOpen Boolean       @default(false)
+  submissionOpenTime DateTime?
+  submissionCloseTime DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  tracks      Track[]
+  teams       Team[]
+  reviewRounds ReviewRound[]
+  questions   Question[]
+  announcements Announcement[]
+}
+
+model TimerConfig {
+  id                 String   @id @default(uuid())
+  hackathonTitle     String
+  hackathonEndTime   String
+  reviewRoundName    String
+  reviewRoundEndTime String
+  soundEnabled       Boolean  @default(true)
+  updatedAt          DateTime @updatedAt
+}
+
+model Role {
+  id          String   @id // e.g. "ADMINISTRATOR", "JUDGE", "STUDENT"
+  name        String
+  users       User[]
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  passwordHash     String
+  name             String
+  phone            String?
+  mustChangePassword Boolean         @default(false)
+  judgeStatus      String            @default("Available") // Available, Reviewing, Walking, Break, Offline
+  avgReviewTime    Float             @default(0.0) // In minutes
+  currentTeamId    String?
+  nextTeamId       String?
+  roleId           String
+  role             Role              @relation(fields: [roleId], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  
+  teamMembers      TeamMember[]
+  judgeReviews     Review[]          @relation("JudgeReviews")
+  assignedQuestions Question[]       @relation("QuestionAssigned")
+  askedQuestions   Question[]        @relation("QuestionAuthor")
+  replies          QuestionReply[]
+  announcements    Announcement[]
+  notifications    Notification[]
+  announcementReceipts AnnouncementReceipt[]
+  auditLogs        AuditLog[]
+  judgeAssignments JudgeAssignment[]
+  assignedTracks   Track[]
+  evaluationClaims EvaluationClaim[]
+  reviewOverrides  ReviewOverride[]  @relation("OverriddenBy")
+  studentFeedbacks StudentFeedback[]
+  juryFeedbacks    JuryFeedback[]
+  eventFeedbacks   EventFeedback[]
+  teamSubmissions  TeamSubmission[]
+  projectSubmissions ProjectSubmission[]
+  projectSubmissionRevisions ProjectSubmissionRevision[]
+  submissionFiles  SubmissionFile[]
+}
+
+model Track {
+  id                    String            @id @default(uuid())
+  name                  String            // e.g. "FinTech", "Healthcare", "AI & ML", "Cybersecurity", "Open Innovation"
+  hackathonId           String
+  hackathon             Hackathon         @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  resultsLocked         Boolean           @default(false)
+  frozenLeaderboard     String?
+  leaderboardVisibility String            @default("ADMIN_ONLY") // HIDDEN, ADMIN_ONLY, ADMIN_JUDGES, PUBLIC, STUDENTS
+  exposeScoresToStudents Boolean           @default(false)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  
+  teams       Team[]
+  announcements Announcement[]
+  judgeAssignments JudgeAssignment[]
+  judges      User[]
+  reviewRounds ReviewRound[]
+}
+
+model Team {
+  id               String            @id @default(uuid())
+  registrationId   String?           @unique
+  name             String
+  teamCode         String?           @unique
+  qrCode           String?
+  college          String?
+  collegeName      String?
+  domain           String?
+  selectedPsId     String?
+  mentorName1      String?
+  emergencyContact String?
+  projectTitle     String?
+  problemStatement String?
+  projectDesc      String?
+  projectUrl       String?
+  demoUrl          String?
+  presentationUrl  String?
+  techStack        String?
+  status           String            @default("Registered") // Registered, Checked In, Review Pending, Currently Reviewing, Completed, Disqualified, Withdrawn
+  checkInStatus    String            @default("PENDING")    // PENDING, PARTIALLY_CHECKED_IN, FULLY_CHECKED_IN
+  locked           Boolean           @default(false)
+  repoVisibility   String?           // PUBLIC or PRIVATE
+  repoLastUpdated  DateTime?
+  repoCommitCount  Int               @default(0)
+  mentorId         String?
+  checkedIn        Boolean           @default(false)
+  checkInTime      DateTime?
+  checkedInBy      String?
+  qrGeneratedAt    DateTime?
+  pdfUrl           String?
+  pdfFilename      String?
+  pdfUploadedAt    DateTime?
+  trackId          String
+  track            Track             @relation(fields: [trackId], references: [id], onDelete: Restrict)
+  hackathonId      String
+  hackathon        Hackathon         @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  // Extended Lead Details
+  leadName         String?
+  leadEmail        String?
+  leadMobile       String?
+  leadUsn          String?
+
+  // Extended Member 2 Details
+  member2Name      String?
+  member2Email     String?
+  member2Mobile    String?
+  member2Usn       String?
+
+  // Extended Member 3 Details
+  member3Name      String?
+  member3Email     String?
+  member3Mobile    String?
+  member3Usn       String?
+
+  // Extended Member 4 Details
+  member4Name      String?
+  member4Email     String?
+  member4Mobile    String?
+  member4Usn       String?
+
+  // Extended Member 5 Details
+  member5Name      String?
+  member5Email     String?
+  member5Mobile    String?
+  member5Usn       String?
+
+  // Final Payment Status (PENDING, PAID, FAILED, REFUNDED)
+  paymentStatusFinal String          @default("PENDING")
+  
+  members          TeamMember[]
+  reviews          Review[]
+  attendance       Attendance[]
+  judgeAssignments JudgeAssignment[]
+  evaluationClaims EvaluationClaim[]
+  studentFeedbacks StudentFeedback[]
+  eventFeedbacks   EventFeedback[]
+  teamSubmissions  TeamSubmission[]
+  projectSubmission ProjectSubmission?
+  submissionFiles  SubmissionFile[]
+
+  @@index([registrationId])
+  @@index([teamCode])
+  @@index([trackId])
+  @@index([hackathonId])
+  @@index([checkedIn])
+  @@index([checkInStatus])
+  @@index([paymentStatusFinal])
+  @@index([status])
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name      String
+  email     String
+  phone     String?
+  role      String?  @default("MEMBER") // e.g. "LEADER", "MEMBER"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attendance Attendance[]
+
+  @@index([teamId])
+}
+
+model JudgeAssignment {
+  id          String   @id @default(uuid())
+  judgeId     String
+  judge       User     @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  teamId      String
+  team        Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  trackId     String?
+  track       Track?   @relation(fields: [trackId], references: [id], onDelete: SetNull)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@unique([judgeId, teamId])
+  @@index([judgeId])
+  @@index([teamId])
+  @@index([trackId])
+}
+
+model EvaluationClaim {
+  id          String      @id @default(uuid())
+  teamId      String
+  team        Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  roundId     String
+  round       ReviewRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  judgeId     String
+  judge       User        @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  status      String      @default("ACTIVE") // ACTIVE, COMPLETED, RELEASED
+  claimedAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([teamId, roundId])
+  @@index([judgeId])
+  @@index([teamId])
+  @@index([roundId])
+  @@index([status])
+}
+
+model ReviewRound {
+  id                   String            @id @default(uuid())
+  name                 String
+  description          String?
+  sequence             Int               @default(1)
+  trackId              String?
+  track                Track?            @relation(fields: [trackId], references: [id], onDelete: SetNull)
+  startTime            DateTime?
+  endTime              DateTime?
+  active               Boolean           @default(false)
+  locked               Boolean           @default(false)
+  submissionDeadline   DateTime?
+  isTemplate           Boolean           @default(false)
+  templateType         String?           // PROPOSAL, MID_EVAL, PROTOTYPE, FINAL_PRESENTATION
+  rubricVersion        Int               @default(1)
+  thresholdExcellent   Float             @default(85.0)
+  thresholdGood        Float             @default(65.0)
+  thresholdImprovement Float             @default(45.0)
+  duration             Int               @default(600) // Informational duration in seconds
+  weight               Float             @default(1.0)
+  hackathonId          String
+  hackathon            Hackathon         @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  
+  criteria             JudgingCriterion[]
+  reviews              Review[]
+  evaluationClaims     EvaluationClaim[]
+  studentFeedbacks     StudentFeedback[]
+  juryFeedbacks        JuryFeedback[]
+
+  @@index([hackathonId])
+  @@index([active])
+}
+
+model JudgingCriterion {
+  id          String      @id @default(uuid())
+  roundId     String
+  round       ReviewRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  name        String      // e.g. "Code Quality", "Innovation", "Feasibility"
+  description String
+  maxMarks    Float
+  weight      Float       @default(1.0)
+  sequence    Int         @default(1)
+  rubricVersion Int       @default(1)
+  required    Boolean     @default(true)
+  locked      Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  scores          ReviewScore[]
+  reviewOverrides ReviewOverride[]
+
+  @@index([roundId])
+}
+
+model Review {
+  id              String        @id @default(uuid())
+  roundId         String
+  round           ReviewRound   @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  teamId          String
+  team            Team          @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  judgeId         String
+  judge           User          @relation("JudgeReviews", fields: [judgeId], references: [id], onDelete: Cascade)
+  rubricVersion   Int           @default(1)
+  comments        String?
+  status          String        @default("DRAFT") // "DRAFT" or "SUBMITTED"
+  plannedDuration Int?          // in seconds (informational only)
+  actualDuration  Int?          // in seconds (informational only)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  scores          ReviewScore[]
+  overrides       ReviewOverride[]
+
+  @@unique([roundId, teamId, judgeId])
+  @@index([judgeId])
+  @@index([teamId])
+  @@index([roundId])
+  @@index([status])
+}
+
+model ReviewScore {
+  id          String           @id @default(uuid())
+  reviewId    String
+  review      Review           @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  criterionId String
+  criterion   JudgingCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
+  score       Float
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([reviewId, criterionId])
+  @@index([reviewId])
+  @@index([criterionId])
+}
+
+model ReviewOverride {
+  id            String           @id @default(uuid())
+  reviewId      String
+  review        Review           @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  criterionId   String
+  criterion     JudgingCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
+  originalScore Float
+  newScore      Float
+  changedById   String
+  changedBy     User             @relation("OverriddenBy", fields: [changedById], references: [id], onDelete: Cascade)
+  reason        String
+  createdAt     DateTime         @default(now())
+
+  @@index([reviewId])
+  @@index([changedById])
+}
+
+model Question {
+  id           String          @id @default(uuid())
+  hackathonId  String
+  hackathon    Hackathon       @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User            @relation("QuestionAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  assignedToId String?
+  assignedTo   User?           @relation("QuestionAssigned", fields: [assignedToId], references: [id], onDelete: SetNull)
+  category     String          // "TECHNICAL" or "ORGANIZATIONAL"
+  title        String
+  content      String
+  venueLocation String?
+  priority     String          @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status       String          @default("Open")   // Open, Assigned, In Progress, Waiting for Student, Resolved, Closed
+  internalNotes String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  
+  replies      QuestionReply[]
+
+  @@index([userId])
+  @@index([assignedToId])
+  @@index([status])
+}
+
+model QuestionReply {
+  id         String   @id @default(uuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@index([questionId])
+}
+
+model Announcement {
+  id             String                 @id @default(uuid())
+  hackathonId    String
+  hackathon      Hackathon              @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  trackId        String?
+  track          Track?                 @relation(fields: [trackId], references: [id], onDelete: SetNull)
+  title          String
+  content        String
+  category       String                 @default("GENERAL") // GENERAL, SCHEDULE, TECHNICAL, FOOD, VENUE, EMERGENCY
+  priority       String                 @default("INFO")    // INFO, IMPORTANT, CRITICAL
+  targetAudience String                 @default("EVERYONE") // EVERYONE, STUDENTS, JUDGES, ADMINS, TRACK
+  pinned         Boolean                @default(false)
+  status         String                 @default("PUBLISHED") // DRAFT, PUBLISHED
+  publishAt      DateTime               @default(now())
+  expireAt       DateTime?
+  authorId       String
+  author         User                   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  
+  receipts       AnnouncementReceipt[]
+
+  @@index([hackathonId])
+  @@index([targetAudience])
+  @@index([status])
+}
+
+model AnnouncementReceipt {
+  id             String       @id @default(uuid())
+  announcementId String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status         String       // READ, ACKNOWLEDGED
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([announcementId, userId])
+}
+
+model Attendance {
+  id          String      @id @default(uuid())
+  teamId      String
+  team        Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  memberId    String?
+  member      TeamMember? @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  status      String      @default("PRESENT") // PRESENT, ABSENT
+  checkedInBy String
+  createdAt   DateTime    @default(now())
+
+  @@index([teamId])
+  @@index([memberId])
+}
+
+model StudentFeedback {
+  id          String      @id @default(uuid())
+  teamId      String
+  team        Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  studentId   String
+  student     User        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  roundId     String?
+  round       ReviewRound? @relation(fields: [roundId], references: [id], onDelete: SetNull)
+  rating      Int         // 1 to 5
+  comments    String?
+  createdAt   DateTime    @default(now())
+
+  @@index([teamId])
+  @@index([studentId])
+}
+
+model JuryFeedback {
+  id          String      @id @default(uuid())
+  judgeId     String
+  judge       User        @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  roundId     String?
+  round       ReviewRound? @relation(fields: [roundId], references: [id], onDelete: SetNull)
+  category    String      @default("GENERAL") // GENERAL, VENUE, APP_UX, SCORING_RUBRIC, TIMING
+  comments    String
+  createdAt   DateTime    @default(now())
+
+  @@index([judgeId])
+}
+
+model EventFeedback {
+  id                     String   @id @default(uuid())
+  userId                 String
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userRole               String   // "STUDENT" or "JUDGE"
+  teamId                 String?
+  team                   Team?    @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  q1Organization         Int      // 1 to 5
+  q2ProblemRelevance     Int      // 1 to 5
+  q3RegistrationSupport  Int      // 1 to 5
+  q4FacilitiesTech       Int      // 1 to 5
+  q5MentoringGuidance    Int      // 1 to 5
+  q6FairnessTransparency Int      // 1 to 5
+  q7FoodHospitality      Int      // 1 to 5
+  q8VolunteerSupport     Int      // 1 to 5
+  q9LearningNetworking   Int      // 1 to 5
+  q10OverallSatisfaction Int      // 1 to 5
+  avgRating              Float
+  comments               String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@unique([userId])
+  @@index([userRole])
+  @@index([teamId])
+  @@index([createdAt])
+}
+
+model TeamSubmission {
+  id           String   @id @default(uuid())
+  teamId       String
+  team         Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  domain       String   // Domain / Track / Theme
+  pdfUrl       String
+  originalName String
+  fileSize     Int
+  uploadedById String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+
+  @@index([teamId])
+  @@index([domain])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  content   String
+  read      Boolean  @default(false)
+  type      String   // ANNOUNCEMENT, REVIEW_ASSIGNED, REVIEW_REMINDER, REVIEW_SUBMITTED, QUESTION_ASSIGNED, QUESTION_REPLY, CHECKIN_CONFIRM, RESULTS_PUBLISHED
+  deepLink  String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  actorRole     String?
+  action        String
+  details       String
+  resource      String?
+  resourceId    String?
+  previousState String?
+  newState      String?
+  ipAddress     String?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model ProjectSubmission {
+  id                  String                      @id @default(uuid())
+  teamId              String                      @unique
+  team                Team                        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  projectTitle        String
+  projectAbstract     String
+  githubUrl           String
+  presentationUrl     String
+  originalFileName    String
+  fileSize            Int
+  mimeType            String?
+  status              String                      @default("SUBMITTED") // DRAFT, SUBMITTED, LOCKED
+  submittedById       String
+  submittedBy         User                        @relation(fields: [submittedById], references: [id], onDelete: Cascade)
+  version             Int                         @default(1)
+  submittedAt         DateTime                    @default(now())
+  updatedAt           DateTime                    @updatedAt
+
+  revisions           ProjectSubmissionRevision[]
+  submissionFiles     SubmissionFile[]
+
+  @@index([teamId])
+  @@index([status])
+  @@index([submittedAt])
+}
+
+model ProjectSubmissionRevision {
+  id                  String                      @id @default(uuid())
+  submissionId        String
+  submission          ProjectSubmission           @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  projectTitle        String
+  projectAbstract     String
+  githubUrl           String
+  presentationUrl     String
+  originalFileName    String
+  fileSize            Int
+  version             Int
+  submittedById       String
+  submittedBy         User                        @relation(fields: [submittedById], references: [id], onDelete: Cascade)
+  createdAt           DateTime                    @default(now())
+
+  @@index([submissionId])
+}
+
+model SubmissionFile {
+  id               String            @id @default(uuid())
+  teamId           String
+  team             Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  submissionId     String?
+  submission       ProjectSubmission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  category         String            @default("presentation") // presentation, source-code, documentation, other
+  originalFileName String
+  storedFileName   String
+  mimeType         String
+  fileSize         Int
+  storagePath      String
+  version          Int               @default(1)
+  uploadedById     String
+  uploadedBy       User              @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  createdAt        DateTime          @default(now())
+
+  @@index([teamId])
+  @@index([submissionId])
+  @@index([category])
+}
+
+

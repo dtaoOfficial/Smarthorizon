@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartHorizon | Judging Criteria Builder</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e0e3e5",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "error": "#ba1a1a",
+                    "primary": "#003d9b",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#374763",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#091c35",
+                    "on-primary-fixed-variant": "#0040a2",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#0c56d0",
+                    "on-primary-container": "#c4d2ff",
+                    "inverse-primary": "#b2c5ff",
+                    "outline": "#737685",
+                    "secondary-fixed": "#d6e3ff",
+                    "on-tertiary-container": "#ffc6b2",
+                    "secondary-fixed-dim": "#b7c7e8",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#001848",
+                    "surface-dim": "#d8dadc",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#cdddff",
+                    "secondary": "#4f5f7b",
+                    "surface-container-high": "#e6e8ea",
+                    "on-background": "#191c1e",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#0052cc",
+                    "primary-fixed": "#dae2ff",
+                    "surface": "#f8f9fb",
+                    "tertiary-container": "#a33500",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-surface": "#191c1e",
+                    "on-surface-variant": "#434654",
+                    "on-secondary-container": "#51617e",
+                    "error-container": "#ffdad6",
+                    "background": "#f8f9fb",
+                    "outline-variant": "#c3c6d6",
+                    "surface-bright": "#f8f9fb",
+                    "surface-container": "#eceef0",
+                    "tertiary": "#7b2600",
+                    "primary-fixed-dim": "#b2c5ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "container-max": "1440px",
+                    "margin-desktop": "32px",
+                    "margin-mobile": "16px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display": ["Inter"],
+                    "code": ["monospace"],
+                    "body-sm": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "code": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "title-lg": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .drag-handle:active { cursor: grabbing; }
+        .row-hover:hover { background-color: #F6F8FA; }
+        .custom-shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+        .glass-header { backdrop-filter: blur(8px); background-color: rgba(248, 249, 251, 0.8); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary-container">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation (Mandatory from JSON) -->
+<aside class="w-[256px] h-screen sticky top-0 flex flex-col h-full py-margin-desktop bg-surface-container border-r border-outline-variant z-50">
+<div class="px-6 mb-10">
+<h1 class="font-headline-lg text-headline-lg font-black text-primary">SmartHorizon</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Hackathon Admin</p>
+</div>
+<nav class="flex-1 px-3 space-y-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-on-surface-variant hover:bg-surface-container-high group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-on-surface-variant hover:bg-surface-container-high group" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="font-label-md">Participants</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-on-surface-variant hover:bg-surface-container-high group" href="#">
+<span class="material-symbols-outlined text-[20px]">alt_route</span>
+<span class="font-label-md">Tracks</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-secondary-container text-on-secondary-container font-semibold group" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span class="font-label-md">Judging</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-on-surface-variant hover:bg-surface-container-high group" href="#">
+<span class="material-symbols-outlined text-[20px]">event</span>
+<span class="font-label-md">Event</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-on-surface-variant hover:bg-surface-container-high group" href="#">
+<span class="material-symbols-outlined text-[20px]">assessment</span>
+<span class="font-label-md">Reports</span>
+</a>
+<div class="pt-4 mt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-on-surface-variant hover:bg-surface-container-high group" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</div>
+</nav>
+<div class="px-3 mt-auto">
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary-container text-white rounded-lg font-title-lg hover:brightness-110 transition-all active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Create Event</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col overflow-hidden bg-surface">
+<!-- Top Navbar (Mandatory from JSON) -->
+<header class="flex justify-between items-center w-full h-14 px-margin-desktop z-40 border-b border-outline-variant bg-surface sticky top-0">
+<div class="flex items-center gap-6">
+<span class="font-headline-md text-headline-md font-bold text-primary">SmartHorizon</span>
+<div class="h-6 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-md bg-surface-container-low px-3 py-1 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-sm">search</span>
+<span>Search criteria...</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center gap-4">
+<div class="text-right">
+<p class="text-label-md font-semibold text-primary">Current Round: Phase 2</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">General Track</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a corporate administrator, female, with a friendly expression. The background is a clean, neutral gray that complements the light mode UI. The lighting is soft and high-key, highlighting the crisp details of her professional attire and the sleek, modern aesthetic of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG6t9Fieo8W6aiPrwXo14W6GkDva2gNxoGkIwWyiBF6yMfqSIEPYDeRg-KUK44btWB6XixJGKaRrCrJMe0E-uBf-T5fSI-QP0aSsRxVPe49p4rzb97orLClkxQRJNX0rZVwQumtEO0R4un-K5AcMRe9ImJd4CoqcSy_wa9rYzNnIvNa9PtXt8NJ1y51xym5AHC2gkFONRIo8KXxsd_6ryj_u81KA8ZDvY8P6X8UTLJ689RI9DVauHHTsy-tX5k05N3Y6WU0nBZyIEF"/>
+</div>
+</div>
+</header>
+<!-- Scrollable Content Area -->
+<section class="flex-1 overflow-y-auto p-margin-desktop max-w-container-max mx-auto w-full">
+<!-- Breadcrumbs & Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<nav class="flex items-center gap-2 text-on-surface-variant text-label-md mb-2">
+<span>Judging</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span>Review Rounds</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-medium">Review 1 Builder</span>
+</nav>
+<h2 class="font-display text-display text-on-surface">Review 1</h2>
+<p class="text-body-md text-on-surface-variant max-w-2xl mt-1">Define the evaluation framework for the initial screening phase. Drag and drop rows to reorder criteria priority.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant bg-white text-secondary font-title-lg rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">file_upload</span>
+<span>Import Template</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary-container text-white font-title-lg rounded-lg hover:brightness-110 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+<span>Create Review Round</span>
+</button>
+</div>
+</div>
+<!-- Criteria Table (Bento Grid / Airtable-like pattern) -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full border-collapse text-left">
+<thead class="bg-surface-container-low border-b border-outline-variant sticky top-0 z-10">
+<tr>
+<th class="w-10 px-4 py-3"></th>
+<th class="px-4 py-3 font-title-lg text-on-surface uppercase tracking-wider text-[11px]">Criterion Name</th>
+<th class="px-4 py-3 font-title-lg text-on-surface uppercase tracking-wider text-[11px]">Description</th>
+<th class="px-4 py-3 font-title-lg text-on-surface uppercase tracking-wider text-[11px] w-32">Max Marks</th>
+<th class="px-4 py-3 font-title-lg text-on-surface uppercase tracking-wider text-[11px] w-32">Mandatory</th>
+<th class="w-10 px-4 py-3"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="row-hover transition-colors group">
+<td class="px-4 py-3">
+<span class="material-symbols-outlined text-outline cursor-grab drag-handle opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-md font-semibold text-on-surface">Problem Understanding</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="text-body-md text-on-surface-variant italic">'Clear problem statement'</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1 rounded w-fit border border-outline-variant/30">
+<span class="text-body-md font-code">10</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-primary-fixed text-on-primary-fixed border border-primary/20">Yes</span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="p-1 hover:bg-surface-container-highest rounded-md transition-colors text-outline">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="row-hover transition-colors group">
+<td class="px-4 py-3">
+<span class="material-symbols-outlined text-outline cursor-grab drag-handle opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-md font-semibold text-on-surface">Innovation</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="text-body-md text-on-surface-variant italic">'Originality of the solution'</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1 rounded w-fit border border-outline-variant/30">
+<span class="text-body-md font-code">15</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-primary-fixed text-on-primary-fixed border border-primary/20">Yes</span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="p-1 hover:bg-surface-container-highest rounded-md transition-colors text-outline">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="row-hover transition-colors group">
+<td class="px-4 py-3">
+<span class="material-symbols-outlined text-outline cursor-grab drag-handle opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-md font-semibold text-on-surface">Technical Feasibility</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="text-body-sm text-outline italic">No description provided</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1 rounded w-fit border border-outline-variant/30">
+<span class="text-body-md font-code">20</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-primary-fixed text-on-primary-fixed border border-primary/20">Yes</span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="p-1 hover:bg-surface-container-highest rounded-md transition-colors text-outline">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="row-hover transition-colors group">
+<td class="px-4 py-3">
+<span class="material-symbols-outlined text-outline cursor-grab drag-handle opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-body-md font-semibold text-on-surface">Presentation</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="text-body-sm text-outline italic">No description provided</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1 rounded w-fit border border-outline-variant/30">
+<span class="text-body-md font-code">5</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight bg-surface-variant text-on-surface-variant border border-outline-variant">No</span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="p-1 hover:bg-surface-container-highest rounded-md transition-colors text-outline">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Empty Row for "Add" Interaction -->
+<tr class="bg-surface-container-low transition-all duration-300">
+<td class="px-4 py-4" colspan="6">
+<button class="flex items-center gap-2 text-primary font-title-lg hover:translate-x-1 transition-transform group">
+<div class="p-1 rounded-md bg-primary-container text-white group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</div>
+<span>Add Criterion</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer Calculation -->
+<div class="px-6 py-4 bg-surface-variant/30 border-t border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">calculate</span>
+<span class="text-body-md text-on-surface-variant">Points weighted across 4 criteria</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-label-md uppercase tracking-widest text-on-surface-variant">Total:</span>
+<div class="bg-primary-container px-4 py-2 rounded-lg text-white font-headline-md shadow-inner">
+<span class="opacity-70 text-sm">MAX</span> 50 <span class="opacity-70 text-sm">MARKS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Guidance Cards (Bento style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+<div class="p-6 rounded-xl bg-white border border-outline-variant hover:border-primary transition-colors">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary">info</span>
+</div>
+<h4 class="font-title-lg text-on-surface mb-2">Review Guidelines</h4>
+<p class="text-body-sm text-on-surface-variant">Ensure your criteria are objective and measurable to reduce judge bias during the phase 2 evaluation.</p>
+</div>
+<div class="p-6 rounded-xl bg-white border border-outline-variant hover:border-primary transition-colors">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-tertiary">analytics</span>
+</div>
+<h4 class="font-title-lg text-on-surface mb-2">Weight Distribution</h4>
+<p class="text-body-sm text-on-surface-variant">Technical Feasibility accounts for 40% of the total score in this round. Consider balancing other tracks.</p>
+</div>
+<div class="p-6 rounded-xl bg-white border border-outline-variant hover:border-primary transition-colors">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+</div>
+<h4 class="font-title-lg text-on-surface mb-2">Mandatory Fields</h4>
+<p class="text-body-sm text-on-surface-variant">Mandatory criteria must be filled by every judge before they can submit their evaluation for a team.</p>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple visual feedback for drag-and-drop placeholder
+        const dragHandles = document.querySelectorAll('.drag-handle');
+        dragHandles.forEach(handle => {
+            handle.addEventListener('mousedown', () => {
+                handle.closest('tr').style.opacity = '0.5';
+                handle.closest('tr').style.backgroundColor = '#e0e3e5';
+            });
+            handle.addEventListener('mouseup', () => {
+                handle.closest('tr').style.opacity = '1';
+                handle.closest('tr').style.backgroundColor = '';
+            });
+        });
+
+        // Add Criterion animation simulation
+        const addBtn = document.querySelector('button:has(span:contains("Add Criterion"))');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                alert('Criterion Builder overlay would launch here.');
+            });
+        }
+    </script>
+</body></html>
