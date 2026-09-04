@@ -37,7 +37,6 @@ export const ReportsPanel: React.FC = () => {
   const [search, setSearch] = useState('');
   const [trackFilter, setTrackFilter] = useState('');
   const [selectedThemeFilter, setSelectedThemeFilter] = useState('');
-  const [feedbackRoleFilter, setFeedbackRoleFilter] = useState('');
 
   const { data: summaryData } = useQuery({
     queryKey: ['report-summary'],
@@ -176,33 +175,41 @@ export const ReportsPanel: React.FC = () => {
       const headers = [
         'Respondent Name',
         'Email',
-        'Role',
+        'Participant Role',
         'Team Name',
-        'Track / Theme',
-        'Q1 Org & Mgt (/5)',
-        'Q2 Problem/Theme (/5)',
-        'Q3 Registration (/5)',
-        'Q4 Facilities/Tech (/5)',
-        'Q5 Mentoring (/5)',
-        'Q6 Evaluation Fairness (/5)',
+        'Team ID',
+        'Institution',
+        'Theme / PS No.',
+        'Q1 Registration & Comms (/5)',
+        'Q2 Briefing Clarity (/5)',
+        'Q3 Problem Statement Clarity (/5)',
+        'Q4 Mentoring Quality (/5)',
+        'Q5 Organiser Support (/5)',
+        'Q6 Workspace & Tech Facilities (/5)',
         'Q7 Food & Hospitality (/5)',
-        'Q8 Volunteers (/5)',
-        'Q9 Learning & Net (/5)',
-        'Q10 Overall Satisf. (/5)',
-        'Overall Avg Rating (/5.0)',
-        'Comments & Suggestions',
+        'Q8 Jury Feedback Quality (/5)',
+        'Q9 Learning Gained (/5)',
+        'Q10 Networking & Exposure (/5)',
+        'Q11 Overall Value (/5)',
+        'Overall Rating (/5.0)',
+        'Most Valuable Aspect',
+        'Suggestions for Improvement',
+        'Key Outcomes',
+        'Would Participate Again',
+        'Would Recommend',
+        'Quote Permission',
         'Submitted At',
       ];
 
       const filtered = feedbackSummaryData.feedbacks.filter((f: any) => {
-        if (feedbackRoleFilter && f.userRole !== feedbackRoleFilter) return false;
         if (search) {
           const term = search.toLowerCase();
           return (
             f.userName.toLowerCase().includes(term) ||
             f.userEmail.toLowerCase().includes(term) ||
             f.teamName.toLowerCase().includes(term) ||
-            (f.comments && f.comments.toLowerCase().includes(term))
+            (f.mostValuableAspect && f.mostValuableAspect.toLowerCase().includes(term)) ||
+            (f.suggestionsForImprovement && f.suggestionsForImprovement.toLowerCase().includes(term))
           );
         }
         return true;
@@ -211,21 +218,29 @@ export const ReportsPanel: React.FC = () => {
       const rows = filtered.map((f: any) => [
         f.userName,
         f.userEmail,
-        f.userRole,
+        f.participantRole === 'TEAM_LEAD' ? 'Team Lead' : 'Member',
         f.teamName,
-        f.trackName,
-        f.q1,
-        f.q2,
-        f.q3,
-        f.q4,
-        f.q5,
-        f.q6,
-        f.q7,
-        f.q8,
-        f.q9,
-        f.q10,
+        f.teamRegistrationId,
+        f.institution,
+        f.theme,
+        f.ratings.q1RegistrationComms,
+        f.ratings.q2BriefingClarity,
+        f.ratings.q3ProblemStatementClarity,
+        f.ratings.q4MentoringQuality,
+        f.ratings.q5OrganiserSupport,
+        f.ratings.q6WorkspaceTechFacilities,
+        f.ratings.q7FoodHospitality,
+        f.ratings.q8JuryFeedbackQuality,
+        f.ratings.q9LearningGained,
+        f.ratings.q10NetworkingExposure,
+        f.ratings.q11OverallValue,
         f.avgRating,
-        f.comments || '',
+        f.mostValuableAspect || '',
+        f.suggestionsForImprovement || '',
+        (f.keyOutcomes || []).join('; '),
+        f.wouldParticipateAgain,
+        f.wouldRecommend,
+        f.quotePermission,
         new Date(f.createdAt).toLocaleString(),
       ]);
 
@@ -492,18 +507,6 @@ export const ReportsPanel: React.FC = () => {
               </select>
             )}
 
-            {activeTab === 'feedback' && (
-              <select
-                value={feedbackRoleFilter}
-                onChange={(e) => setFeedbackRoleFilter(e.target.value)}
-                className="h-8 bg-[#0E0E0E] border border-[#FFFFFF]/30 rounded text-xs font-mono font-bold px-2.5 text-[#FFFFFF] focus:outline-none"
-              >
-                <option value="">ROLE: ALL RESPONDENTS</option>
-                <option value="STUDENT">STUDENTS ONLY</option>
-                <option value="JUDGE">JUDGES ONLY</option>
-              </select>
-            )}
-
             {(activeTab === 'evaluation' || activeTab === 'attendance') && (
               <select
                 value={trackFilter}
@@ -696,76 +699,37 @@ export const ReportsPanel: React.FC = () => {
               </div>
             ) : (
               <>
-                {/* Role Switcher Sub-Tabs */}
-                <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0E0E0E] p-2.5 rounded-sm border border-[#FFFFFF]/30  text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[#B3B3B3] uppercase font-bold px-1">FILTER:</span>
-                    <button
-                      onClick={() => setFeedbackRoleFilter('')}
-                      className={`px-3 py-1.5 rounded text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
-                        feedbackRoleFilter === ''
-                          ? 'bg-[#2B2B2B] text-[#FFFFFF] border border-[#FFFFFF]/60'
-                          : 'text-[#B3B3B3] hover:text-[#FFFFFF]'
-                      }`}
-                    >
-                      <span>ALL ({feedbackSummaryData.summary.totalResponses})</span>
-                    </button>
-
-                    <button
-                      onClick={() => setFeedbackRoleFilter('STUDENT')}
-                      className={`px-3 py-1.5 rounded text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
-                        feedbackRoleFilter === 'STUDENT'
-                          ? 'bg-[#2B2B2B] text-[#FFFFFF] border border-[#FFFFFF]/60'
-                          : 'text-[#B3B3B3] hover:text-[#FFFFFF]'
-                      }`}
-                    >
-                      <span>STUDENTS ({feedbackSummaryData.summary.studentResponsesCount})</span>
-                    </button>
-
-                    <button
-                      onClick={() => setFeedbackRoleFilter('JUDGE')}
-                      className={`px-3 py-1.5 rounded text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
-                        feedbackRoleFilter === 'JUDGE'
-                          ? 'bg-[#2B2B2B] text-[#FFFFFF] border border-[#FFFFFF]/60'
-                          : 'text-[#B3B3B3] hover:text-[#FFFFFF]'
-                      }`}
-                    >
-                      <span>JUDGES ({feedbackSummaryData.summary.judgeResponsesCount})</span>
-                    </button>
-                  </div>
-                </div>
-
                 {/* Metrics Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="bg-[#0E0E0E] border border-[#FFFFFF]/30 p-3.5 rounded-sm space-y-1  shadow-xl">
                     <span className="text-[10px] text-[#B3B3B3] uppercase font-bold">RESPONSES</span>
                     <span className="text-2xl font-extrabold text-[#FFFFFF] block">
-                      {feedbackRoleFilter === 'STUDENT' ? feedbackSummaryData.summary.studentResponsesCount :
-                       feedbackRoleFilter === 'JUDGE' ? feedbackSummaryData.summary.judgeResponsesCount :
-                       feedbackSummaryData.summary.totalResponses}
+                      {feedbackSummaryData.summary.totalResponses}
                     </span>
                   </div>
 
                   <div className="bg-[#0E0E0E] border border-[#FFFFFF]/30 p-3.5 rounded-sm space-y-1  shadow-xl">
-                    <span className="text-[10px] text-[#FFFFFF] uppercase font-bold">STUDENT AVG SCORE</span>
+                    <span className="text-[10px] text-[#FFFFFF] uppercase font-bold">OVERALL AVG RATING</span>
                     <span className="text-2xl font-extrabold text-[#FFFFFF] block">
-                      {feedbackSummaryData.summary.studentAvgRating} / 5.0
+                      {feedbackSummaryData.summary.overallAvgRating} / 5.0
                     </span>
                   </div>
 
                   <div className="bg-[#0E0E0E] border border-[#FFFFFF]/30 p-3.5 rounded-sm space-y-1  shadow-xl">
-                    <span className="text-[10px] text-[#FFFFFF] uppercase font-bold">JUDGE AVG SCORE</span>
+                    <span className="text-[10px] text-[#FFFFFF] uppercase font-bold">WOULD PARTICIPATE AGAIN</span>
                     <span className="text-2xl font-extrabold text-[#FFFFFF] block">
-                      {feedbackSummaryData.summary.judgeAvgRating} / 5.0
+                      {feedbackSummaryData.feedbacks.length > 0
+                        ? Math.round((feedbackSummaryData.feedbacks.filter((f: any) => f.wouldParticipateAgain === 'YES').length / feedbackSummaryData.feedbacks.length) * 100)
+                        : 0}% YES
                     </span>
                   </div>
 
                   <div className="bg-[#0E0E0E] border border-[#FFFFFF]/30 p-3.5 rounded-sm space-y-1  shadow-xl">
-                    <span className="text-[10px] text-[#FFFFFF] uppercase font-bold">VIEW AVERAGE</span>
+                    <span className="text-[10px] text-[#FFFFFF] uppercase font-bold">WOULD RECOMMEND</span>
                     <span className="text-2xl font-extrabold text-[#FFFFFF] block">
-                      {feedbackRoleFilter === 'STUDENT' ? feedbackSummaryData.summary.studentAvgRating :
-                       feedbackRoleFilter === 'JUDGE' ? feedbackSummaryData.summary.judgeAvgRating :
-                       feedbackSummaryData.summary.overallAvgRating} / 5.0
+                      {feedbackSummaryData.feedbacks.length > 0
+                        ? Math.round((feedbackSummaryData.feedbacks.filter((f: any) => f.wouldRecommend === 'YES').length / feedbackSummaryData.feedbacks.length) * 100)
+                        : 0}% YES
                     </span>
                   </div>
                 </div>
@@ -788,23 +752,27 @@ export const ReportsPanel: React.FC = () => {
                         <tr>
                           <th className="p-3">RESPONDENT</th>
                           <th className="p-3">ROLE</th>
-                          <th className="p-3">TEAM / TRACK</th>
+                          <th className="p-3">TEAM / INSTITUTION</th>
+                          <th className="p-3">THEME / PS NO.</th>
                           <th className="p-3 text-center">AVG RATING</th>
-                          <th className="p-3">COMMENTS & SUGGESTIONS</th>
+                          <th className="p-3">REMARKS</th>
+                          <th className="p-3">OUTCOMES</th>
+                          <th className="p-3 text-center">AGAIN?</th>
+                          <th className="p-3 text-center">RECOMMEND?</th>
                           <th className="p-3">SUBMITTED AT</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-[#FFFFFF]/10 bg-[#0E0E0E]">
                         {feedbackSummaryData.feedbacks
                           .filter((f: any) => {
-                            if (feedbackRoleFilter && f.userRole !== feedbackRoleFilter) return false;
                             if (search) {
                               const term = search.toLowerCase();
                               return (
                                 f.userName.toLowerCase().includes(term) ||
                                 f.userEmail.toLowerCase().includes(term) ||
                                 f.teamName.toLowerCase().includes(term) ||
-                                (f.comments && f.comments.toLowerCase().includes(term))
+                                (f.mostValuableAspect && f.mostValuableAspect.toLowerCase().includes(term)) ||
+                                (f.suggestionsForImprovement && f.suggestionsForImprovement.toLowerCase().includes(term))
                               );
                             }
                             return true;
@@ -816,32 +784,28 @@ export const ReportsPanel: React.FC = () => {
                                 <span className="text-[10px] text-[#B3B3B3] font-mono block">{f.userEmail}</span>
                               </td>
                               <td className="p-3">
-                                <span
-                                  className={`px-2 py-0.5 rounded text-[9px] font-bold border uppercase ${
-                                    f.userRole === 'STUDENT'
-                                      ? 'bg-[#FFFFFF]/10 text-[#FFFFFF] border-[#FFFFFF]/30'
-                                      : 'bg-[#FFFFFF]/10 text-[#FFFFFF] border-[#FFFFFF]/30'
-                                  }`}
-                                >
-                                  {f.userRole}
+                                <span className="px-2 py-0.5 rounded text-[9px] font-bold border uppercase bg-[#FFFFFF]/10 text-[#FFFFFF] border-[#FFFFFF]/30">
+                                  {f.participantRole === 'TEAM_LEAD' ? 'TEAM LEAD' : 'MEMBER'}
                                 </span>
                               </td>
                               <td className="p-3 font-sans text-[#FFFFFF]">
-                                {f.teamName !== 'N/A' ? (
-                                  <>
-                                    <strong className="text-[#FFFFFF]">{f.teamName}</strong>
-                                    <span className="block text-[10px] text-[#FFFFFF] font-mono">TRACK: {f.trackName}</span>
-                                  </>
-                                ) : (
-                                  <span className="text-[#B3B3B3] italic">Judge Platform Feedback</span>
-                                )}
+                                <strong className="text-[#FFFFFF] block">{f.teamName}</strong>
+                                <span className="block text-[10px] text-[#B3B3B3] font-mono">{f.institution}</span>
                               </td>
+                              <td className="p-3 font-mono text-[10px] text-[#B3B3B3]">{f.theme}</td>
                               <td className="p-3 text-center font-bold text-[#FFFFFF] text-sm">
                                 {f.avgRating}
                               </td>
-                              <td className="p-3 font-sans text-[#B3B3B3] text-xs max-w-xs truncate">
-                                {f.comments || <span className="text-[#B3B3B3] italic">No comment text</span>}
+                              <td className="p-3 font-sans text-[#B3B3B3] text-xs max-w-xs">
+                                {f.mostValuableAspect && <div className="truncate"><strong className="text-[#FFFFFF]">Valued:</strong> {f.mostValuableAspect}</div>}
+                                {f.suggestionsForImprovement && <div className="truncate"><strong className="text-[#FFFFFF]">Suggests:</strong> {f.suggestionsForImprovement}</div>}
+                                {!f.mostValuableAspect && !f.suggestionsForImprovement && <span className="italic">No remarks</span>}
                               </td>
+                              <td className="p-3 font-mono text-[10px] text-[#B3B3B3] max-w-[140px]">
+                                {f.keyOutcomes && f.keyOutcomes.length > 0 ? f.keyOutcomes.join(', ') : <span className="italic">None selected</span>}
+                              </td>
+                              <td className="p-3 text-center text-[10px] font-bold text-[#FFFFFF]">{f.wouldParticipateAgain}</td>
+                              <td className="p-3 text-center text-[10px] font-bold text-[#FFFFFF]">{f.wouldRecommend}</td>
                               <td className="p-3 text-[#B3B3B3] text-[10px]">
                                 {new Date(f.createdAt).toLocaleDateString()}{' '}
                                 {new Date(f.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

@@ -90,7 +90,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, isCollapsed
           { to: '/reviews', label: 'Evaluation Deck', icon: <Gavel className="w-4 h-4" />, code: 'EVAL' },
           { to: '/leaderboard', label: 'Leaderboard', icon: <Trophy className="w-4 h-4" />, code: 'ARENA' },
           { to: '/history', label: 'Review Log', icon: <History className="w-4 h-4" />, code: 'LOG' },
-          { to: '/feedback', label: 'Submit Feedback', icon: <Star className="w-4 h-4" />, code: 'FEEDBACK' },
         ];
         break;
       case 'STUDENT':

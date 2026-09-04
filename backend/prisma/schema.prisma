@@ -485,27 +485,49 @@ model JuryFeedback {
   @@index([judgeId])
 }
 
+// Participant feedback form (2026-09-04 rubric). Students only going forward;
+// judges no longer submit through this model. Team/role/theme are auto-filled
+// from the account at submit time rather than typed in, per the official
+// rubric doc.
 model EventFeedback {
-  id                     String   @id @default(uuid())
-  userId                 String
-  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userRole               String   // "STUDENT" or "JUDGE"
-  teamId                 String?
-  team                   Team?    @relation(fields: [teamId], references: [id], onDelete: SetNull)
-  q1Organization         Int      // 1 to 5
-  q2ProblemRelevance     Int      // 1 to 5
-  q3RegistrationSupport  Int      // 1 to 5
-  q4FacilitiesTech       Int      // 1 to 5
-  q5MentoringGuidance    Int      // 1 to 5
-  q6FairnessTransparency Int      // 1 to 5
-  q7FoodHospitality      Int      // 1 to 5
-  q8VolunteerSupport     Int      // 1 to 5
-  q9LearningNetworking   Int      // 1 to 5
-  q10OverallSatisfaction Int      // 1 to 5
-  avgRating              Float
-  comments               String?
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userRole String // "STUDENT" (judges no longer use this form)
+  teamId String?
+  team   Team?  @relation(fields: [teamId], references: [id], onDelete: SetNull)
+
+  participantRole String // "TEAM_LEAD" or "MEMBER", auto-filled from TeamMember.role
+
+  // Section A: Event Experience
+  q1RegistrationComms       Int // Registration process and pre-event communication
+  q2BriefingClarity         Int // Clarity of briefing, rules, schedule and expected outcomes
+  q3ProblemStatementClarity Int // Relevance and clarity of the problem statement selected
+  q4MentoringQuality        Int // Quality and usefulness of mentoring during the Hackathon
+  q5OrganiserSupport        Int // Responsiveness and support from organisers and volunteers
+
+  // Section B: Facilities & Arrangements
+  q6WorkspaceTechFacilities Int // Workspace, power supply, internet and technical facilities
+  q7FoodHospitality         Int // Food, refreshments, accommodation and hospitality
+
+  // Section C: Learning, Evaluation & Outcomes
+  q8JuryFeedbackQuality Int // Clarity and usefulness of the feedback provided by the jury
+  q9LearningGained      Int // Learning gained in technical skills, problem-solving and teamwork
+  q10NetworkingExposure Int // Networking, industry exposure and interaction with other teams
+  q11OverallValue       Int // Overall quality and value of Smart Horizon 2026
+
+  avgRating Float // auto-calculated average of the 11 ratings above, shown as "Overall Rating / 5"
+
+  mostValuableAspect        String?
+  suggestionsForImprovement String?
+
+  keyOutcomes           String // comma-separated subset of: NEW_SKILLS,TEAMWORK,PROTOTYPE,NETWORKING
+  wouldParticipateAgain String // YES, MAYBE, NO
+  wouldRecommend        String // YES, MAYBE, NO
+  quotePermission       String // NAMED, ANONYMOUS, NO
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId])
   @@index([userRole])
