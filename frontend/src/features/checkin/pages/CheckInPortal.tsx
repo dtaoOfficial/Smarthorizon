@@ -125,25 +125,10 @@ export const CheckInPortal: React.FC = () => {
 
   const handleExportDownload = async () => {
     try {
-      const url = `/api/registration/export-attendance?type=${exportType}&format=${exportFormat}`;
-      const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        alert(errData.error || `Export failed with status ${res.status}`);
-        return;
-      }
-
-      const blob = await res.blob();
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = `smarthorizon_${exportType}_attendance.${exportFormat}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      await api.downloadFile(
+        `/api/registration/export-attendance?type=${exportType}&format=${exportFormat}`,
+        `smarthorizon_${exportType}_attendance.${exportFormat}`
+      );
       setExportModalOpen(false);
     } catch (err: any) {
       console.error('Export download error:', err);
@@ -153,25 +138,7 @@ export const CheckInPortal: React.FC = () => {
 
   const handleBulkQrPdfDownload = async () => {
     try {
-      const url = '/api/registration/teams/export-qr-pdf';
-      const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        alert(errData.error || `QR PDF generation failed with status ${res.status}`);
-        return;
-      }
-
-      const blob = await res.blob();
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = 'smarthorizon_bulk_team_qrs.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      await api.downloadFile('/api/registration/teams/export-qr-pdf', 'smarthorizon_bulk_team_qrs.pdf');
     } catch (err: any) {
       console.error('QR PDF download error:', err);
       alert('Failed to download QR PDF: ' + (err.message || 'Network error'));
