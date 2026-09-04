@@ -43,7 +43,7 @@ const queryClient = new QueryClient({
 export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename={(import.meta as any).env.BASE_URL}>
         <AuthProvider>
           <ThemeProvider>
             <ToastProvider>
