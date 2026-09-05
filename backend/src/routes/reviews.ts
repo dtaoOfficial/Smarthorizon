@@ -561,6 +561,17 @@ router.post('/save', authenticateToken, requireRole(['JUDGE']), async (req: Auth
       where: { roundId, teamId, judgeId }
     });
 
+    // Never let a stale autosave (DRAFT) downgrade an already-submitted review.
+    // A debounced autosave request can land after the judge's real submit
+    // (e.g. they tweak a score and hit Submit within the autosave window),
+    // which would otherwise silently revert a completed scorecard to draft.
+    if (existingReview?.status === 'SUBMITTED' && statusToSave === 'DRAFT') {
+      return res.json({
+        success: true,
+        message: 'Review already submitted; draft autosave ignored.',
+      });
+    }
+
     let reviewId = existingReview?.id;
 
     // Save/submit transaction serialized via write mutex for rock-solid SQLite concurrency

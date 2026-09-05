@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -26,6 +26,12 @@ export const TeamReviews: React.FC = () => {
   const [scannerOpen, setScannerOpen] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  // Mirrors isSubmitted for the autosave timer's closure, which otherwise
+  // captures a stale (pre-submit) value and can fire after the real submit.
+  const isSubmittedRef = useRef(false);
+  useEffect(() => {
+    isSubmittedRef.current = isSubmitted;
+  }, [isSubmitted]);
   const [qrVerified, setQrVerified] = useState(false);
   const [loadingTeamName, setLoadingTeamName] = useState<string | null>(null);
 
@@ -106,6 +112,7 @@ export const TeamReviews: React.FC = () => {
 
     setAutoSaveStatus('Saving...');
     const timer = setTimeout(() => {
+      if (isSubmittedRef.current) return; // scorecard already submitted; don't overwrite with a stale draft
       try {
         const localKey = `smarthorizon_draft_${currentTeam.teamId}_${activeRoundData.id}`;
         localStorage.setItem(localKey, JSON.stringify({ scores, comments, timestamp: Date.now() }));
