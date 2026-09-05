@@ -56,12 +56,6 @@ app.use(cors({
 app.use(express.json());
 
 // Rate Limiting Middlewares for Security-Sensitive Operations
-const loginLimiter = createRateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 30, // 30 login attempts per IP per 15 min
-  message: 'Too many login attempts. Please wait 15 minutes before trying again.',
-});
-
 const generalApiLimiter = createRateLimiter({
   windowMs: 60 * 1000, // 1 minute
   max: 300, // 300 requests per minute
@@ -70,7 +64,6 @@ const generalApiLimiter = createRateLimiter({
 
 // Apply general API rate limiting
 app.use('/api', generalApiLimiter);
-app.use('/api/auth/login', loginLimiter);
 
 
 // Base health check endpoint
